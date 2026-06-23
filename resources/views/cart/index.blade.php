@@ -28,7 +28,15 @@
                         <img src="{{ $imgSrc }}" class="cart-img" onerror="this.src='https://via.placeholder.com/80'">
                         <div class="cart-info">
                             <h3 class="cart-name">{{ $item->producto->nombre }}</h3>
-                            <p class="cart-price">Precio: S/ {{ number_format($item->producto->precio,2) }}</p>
+                            @php $efectivo = $item->producto->precio_efectivo; @endphp
+                            <p class="cart-price">
+                                @if($item->producto->precio_oferta)
+                                    <span style="text-decoration:line-through;color:#999;">S/ {{ number_format($item->producto->precio,2) }}</span>
+                                    <span style="color:#e65100;font-weight:700;"> S/ {{ number_format($efectivo,2) }}</span>
+                                @else
+                                    Precio: S/ {{ number_format($item->producto->precio,2) }}
+                                @endif
+                            </p>
                             <form action="{{ route('cart.update', $item->id) }}" method="POST" class="cart-qty-form">
                                 @csrf
                                 @method('PATCH')
@@ -37,10 +45,7 @@
                                 <button class="cart-update-btn" title="Actualizar cantidad"><i class="bi bi-arrow-repeat"></i></button>
                             </form>
                             <p class="cart-subtotal">
-                                @php
-                                    $precio = $item->producto->precio_oferta ?? $item->producto->precio;
-                                @endphp
-                                Subtotal: S/ {{ number_format($precio * $item->cantidad, 2) }}
+                                Subtotal: S/ {{ number_format($efectivo * $item->cantidad, 2) }}
                             </p>
                         </div>
                     </div>

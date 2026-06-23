@@ -116,20 +116,16 @@ class ProductoController extends Controller
             $query->whereIn('marca', (array) $marcas);
         }
 
-        // Precio mínimo
+        // Precio mínimo (usa COALESCE para considerar precio_oferta)
         if ($request->filled('precio_min')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('precio', '>=', $request->precio_min)
-                  ->orWhere('precio_oferta', '>=', $request->precio_min);
-            });
+            $min = (float) $request->precio_min;
+            $query->whereRaw('COALESCE(precio_oferta, precio) >= ?', [$min]);
         }
 
         // Precio máximo
         if ($request->filled('precio_max')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('precio', '<=', $request->precio_max)
-                  ->orWhere('precio_oferta', '<=', $request->precio_max);
-            });
+            $max = (float) $request->precio_max;
+            $query->whereRaw('COALESCE(precio_oferta, precio) <= ?', [$max]);
         }
 
         // Solo ofertas
@@ -141,10 +137,10 @@ class ProductoController extends Controller
         $sort = $request->get('orden', 'relevancia');
         switch ($sort) {
             case 'precio_asc':
-                $query->orderBy('precio', 'asc');
+                $query->orderByRaw('COALESCE(precio_oferta, precio) ASC');
                 break;
             case 'precio_desc':
-                $query->orderBy('precio', 'desc');
+                $query->orderByRaw('COALESCE(precio_oferta, precio) DESC');
                 break;
             case 'nombre_asc':
                 $query->orderBy('nombre', 'asc');

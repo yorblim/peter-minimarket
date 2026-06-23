@@ -30,4 +30,9 @@ class Producto extends Model
     return $this->belongsTo(Categoria::class, 'categoria_id');
 }
 
+    public function getPrecioEfectivoAttribute()
+    {
+        return $this->precio_oferta ?? $this->precio;
+    }
+
 }

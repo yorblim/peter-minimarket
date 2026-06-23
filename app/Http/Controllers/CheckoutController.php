@@ -21,7 +21,7 @@ class CheckoutController extends Controller
         $subtotal = 0;
 
         foreach ($carrito as $item) {
-            $precio = $item->producto->precio_oferta ?? $item->producto->precio;
+            $precio = $item->producto->precio_efectivo;
             $subtotal += $precio * $item->cantidad;
         }
 
@@ -50,12 +50,28 @@ class CheckoutController extends Controller
                 ->with('error', 'Tu carrito está vacío');
         }
 
+        $subtotal = 0;
+        foreach ($carrito as $item) {
+            $precio = $item->producto->precio_efectivo;
+            $subtotal += $precio * $item->cantidad;
+
+            if ($item->cantidad > $item->producto->stock) {
+                return redirect()->route('cart.index')
+                    ->with('error', "Stock insuficiente para {$item->producto->nombre}. Disponible: {$item->producto->stock}");
+            }
+        }
+
+        if ($subtotal < 35) {
+            return redirect()->route('cart.index')
+                ->with('error', 'El monto mínimo para delivery es S/35');
+        }
+
         DB::transaction(function () use ($userId, $carrito) {
             $subtotal = 0;
             $itemsData = [];
 
             foreach ($carrito as $item) {
-                $precio = $item->producto->precio_oferta ?? $item->producto->precio;
+                $precio = $item->producto->precio_efectivo;
                 $subtotal += $precio * $item->cantidad;
 
                 $itemsData[] = [
@@ -73,7 +89,7 @@ class CheckoutController extends Controller
             $delivery = $subtotal >= 45 ? 0 : 5;
             $total = $subtotal + $igv + $delivery;
 
-            $venta = Venta::create([
+            Venta::create([
                 'user_id'  => $userId,
                 'subtotal' => $subtotal,
                 'igv'      => $igv,

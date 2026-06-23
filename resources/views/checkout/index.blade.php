@@ -23,11 +23,19 @@
             </thead>
             <tbody>
                 @foreach($carrito as $item)
+                @php $efectivo = $item->producto->precio_efectivo; @endphp
                 <tr>
                     <td>{{ $item->producto->nombre }}</td>
                     <td>{{ $item->cantidad }}</td>
-                    <td>S/. {{ number_format($item->producto->precio, 2) }}</td>
-                    <td>S/. {{ number_format($item->producto->precio * $item->cantidad, 2) }}</td>
+                    <td>
+                        @if($item->producto->precio_oferta)
+                            <span style="text-decoration:line-through;color:#999;">S/. {{ number_format($item->producto->precio, 2) }}</span>
+                            <span style="color:#e65100;"> S/. {{ number_format($efectivo, 2) }}</span>
+                        @else
+                            S/. {{ number_format($efectivo, 2) }}
+                        @endif
+                    </td>
+                    <td>S/. {{ number_format($efectivo * $item->cantidad, 2) }}</td>
                 </tr>
                 @endforeach
             </tbody>

@@ -21,7 +21,7 @@ class CartController extends Controller
     $subtotal = 0;
 
     foreach ($carrito as $item) {
-        $precio = $item->producto->precio_oferta ?? $item->producto->precio;
+        $precio = $item->producto->precio_efectivo;
         $subtotal += $precio * $item->cantidad;
     }
 
@@ -50,12 +50,22 @@ class CartController extends Controller
         $userId = Auth::id();
         $producto = Producto::findOrFail($id);
 
+        if ($producto->stock < 1) {
+            return back()->with('error', 'Este producto está agotado');
+        }
+
         $item = CarritoItem::where('user_id', $userId)
                            ->where('producto_id', $id)
                            ->first();
 
+        $cantidadSolicitada = $item ? $item->cantidad + 1 : 1;
+
+        if ($cantidadSolicitada > $producto->stock) {
+            return back()->with('error', "Solo hay {$producto->stock} unidades disponibles de {$producto->nombre}");
+        }
+
         if ($item) {
-            $item->cantidad++;
+            $item->cantidad = $cantidadSolicitada;
             $item->save();
         } else {
             CarritoItem::create([
@@ -82,6 +92,10 @@ class CartController extends Controller
         if ($request->cantidad < 1) {
             $item->delete();
             return back()->with('success', 'Producto eliminado del carrito');
+        }
+
+        if ($request->cantidad > $item->producto->stock) {
+            return back()->with('error', "Solo hay {$item->producto->stock} unidades disponibles de {$item->producto->nombre}");
         }
 
         $item->cantidad = $request->cantidad;

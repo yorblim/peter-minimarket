@@ -16,5 +16,19 @@ class AdminUserSeeder extends Seeder
             'password' => Hash::make('admin123'),
             'rol' => 'admin',
         ]);
+
+        User::create([
+            'name' => 'Trabajador',
+            'email' => 'worker@example.com',
+            'password' => Hash::make('worker123'),
+            'rol' => 'worker',
+        ]);
+
+        User::create([
+            'name' => 'Cliente Demo',
+            'email' => 'cliente@example.com',
+            'password' => Hash::make('cliente123'),
+            'rol' => 'cliente',
+        ]);
     }
 }
