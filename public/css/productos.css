@@ -1,0 +1,122 @@
+.admin-container {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px 30px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+}
+
+.admin-container h1 {
+    color: #2d3748;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-table thead th {
+    background: #bf360c;
+    color: #fff;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+}
+
+.admin-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0ede4;
+    font-size: 0.9rem;
+    color: #555;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover td {
+    background: #f8f6f0;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.btn-admin-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e65100;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-admin-add:hover {
+    background: #8d2e00;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-admin-edit {
+    background: #ffd60a;
+    color: #333;
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.82rem;
+    transition: all 0.3s;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-admin-edit:hover {
+    background: #e5c20a;
+    transform: translateY(-1px);
+}
+
+.btn-admin-delete {
+    background: #dc3545;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-admin-delete:hover {
+    background: #b02a37;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .admin-table {
+        font-size: 0.85rem;
+    }
+    .admin-table thead th,
+    .admin-table tbody td {
+        padding: 8px 10px;
+    }
+    .admin-container {
+        padding: 15px;
+    }
+}
