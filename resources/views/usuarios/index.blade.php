@@ -32,7 +32,7 @@
                 <td>
                     <span class="rol-badge
                         @if($user->rol === 'admin') rol-admin
-                        @elseif($user->rol === 'worker') rol-worker
+                        @elseif($user->rol === 'empleado') rol-empleado
                         @else rol-cliente
                         @endif
                     ">{{ $user->rol }}</span>

@@ -18,10 +18,17 @@ class AdminUserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Trabajador',
+            'name' => 'Empleado',
+            'email' => 'empleado@example.com',
+            'password' => Hash::make('empleado123'),
+            'rol' => 'empleado',
+        ]);
+
+        User::create([
+            'name' => 'Trabajador (legacy)',
             'email' => 'worker@example.com',
             'password' => Hash::make('worker123'),
-            'rol' => 'worker',
+            'rol' => 'empleado',
         ]);
 
         User::create([

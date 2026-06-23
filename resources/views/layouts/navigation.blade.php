@@ -13,6 +13,11 @@
                 <div class="dropdown-content">
                     <a href="{{ route('profile.edit') }}">Perfil</a>
 
+                    @if(auth()->user()->rol !== 'cliente')
+                        <a href="{{ route('dashboard') }}">Dashboard</a>
+                        <a href="{{ route('ventas.index') }}">Pedidos</a>
+                    @endif
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="logout-btn">Cerrar sesión</button>

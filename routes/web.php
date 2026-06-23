@@ -7,6 +7,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\VentaController;
+use App\Http\Controllers\DashboardController;
 
 
 Route::post('/categorias/store-ajax', [CategoriaController::class, 'storeAjax'])
@@ -46,17 +48,35 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/', [ProductoController::class, 'publicIndex'])->name('tienda.index');
 
 
-// 📌 Dashboard solo para usuarios logueados
+// 📌 Dashboard con estadísticas (admin y empleado)
+Route::middleware(['auth', 'role:admin,empleado'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 
-// 🔥 Rutas protegidas SOLO para Admin (Productos)
-Route::middleware(['auth', 'role:admin'])->group(function () {
+// 🔥 Rutas protegidas para Admin y Empleado (Productos)
+Route::middleware(['auth', 'role:admin,empleado'])->group(function () {
     Route::resource('productos', ProductoController::class);
 });
 
-// 🔥 Rutas protegidas SOLO para Admin (Categorías)
-Route::middleware(['auth', 'role:admin'])->group(function () {
+// 🔥 Rutas protegidas para Admin y Empleado (Categorías)
+Route::middleware(['auth', 'role:admin,empleado'])->group(function () {
     Route::resource('categorias', CategoriaController::class)->except(['storeAjax']);
+});
+
+
+// 📦 Gestión de pedidos (admin y empleado)
+Route::middleware(['auth', 'role:admin,empleado'])->group(function () {
+    Route::get('/ventas', [VentaController::class, 'index'])->name('ventas.index');
+    Route::get('/ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
+    Route::patch('/ventas/{venta}/estado', [VentaController::class, 'updateEstado'])->name('ventas.updateEstado');
+});
+
+
+// 👤 Mis pedidos (cliente)
+Route::middleware('auth')->group(function () {
+    Route::get('/mis-pedidos', [VentaController::class, 'misPedidos'])->name('ventas.mis-pedidos');
+    Route::patch('/mis-pedidos/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
 });
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Venta;
 use App\Models\CarritoItem;
 use App\Models\Producto;
 use Illuminate\Http\Request;
@@ -9,38 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // Mostrar carrito
     public function index()
-{
-    $userId = Auth::id();
+    {
+        $userId = Auth::id();
 
-    $carrito = CarritoItem::where('user_id', $userId)
-                ->with('producto')
-                ->get();
+        $carrito = CarritoItem::where('user_id', $userId)
+                    ->with('producto')
+                    ->get();
 
-    $subtotal = 0;
+        $subtotal = 0;
+        foreach ($carrito as $item) {
+            $subtotal += $item->producto->precio_efectivo * $item->cantidad;
+        }
 
-    foreach ($carrito as $item) {
-        $precio = $item->producto->precio_efectivo;
-        $subtotal += $precio * $item->cantidad;
+        $igv = Venta::calcularIgv($subtotal);
+        $delivery = Venta::calcularDelivery($subtotal);
+        $total = Venta::calcularTotal($subtotal, $delivery, $igv);
+
+        return view('cart.index', compact('carrito', 'subtotal', 'igv', 'delivery', 'total'));
     }
-
-    // IGV 18%
-    $igv = $subtotal * 0.18;
-
-    // DELIVERY (reglas Cusco)
-    if ($subtotal < 35) {
-        $delivery = null; // No disponible
-    } elseif ($subtotal >= 45) {
-        $delivery = 0; // Gratis
-    } else {
-        $delivery = 5; // Normal
-    }
-
-    $total = $delivery === null ? null : $subtotal + $igv + $delivery;
-
-    return view('cart.index', compact('carrito', 'subtotal', 'igv', 'delivery', 'total'));
-}
 
 
 

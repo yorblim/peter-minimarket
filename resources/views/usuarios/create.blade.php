@@ -31,7 +31,7 @@
             <label>Rol</label>
             <select name="rol" required>
                 <option value="admin">Administrador</option>
-                <option value="worker">Trabajador</option>
+                <option value="empleado">Empleado</option>
             </select>
         </div>
 

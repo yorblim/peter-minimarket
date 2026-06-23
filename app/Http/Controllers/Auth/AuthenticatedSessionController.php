@@ -30,12 +30,8 @@ class AuthenticatedSessionController extends Controller
     $user = $request->user();
 
     // 🔥 Redirección según rol
-    if ($user->rol === 'admin') {
-        return redirect()->route('productos.index');
-    }
-
-    if ($user->rol === 'worker') {
-        return redirect()->route('productos.index'); // o una ruta especial si deseas
+    if ($user->rol === 'admin' || $user->rol === 'empleado') {
+        return redirect()->route('dashboard');
     }
 
     // Por defecto, clientes → tienda

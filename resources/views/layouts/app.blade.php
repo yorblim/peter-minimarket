@@ -33,23 +33,25 @@
                 <li>
                     <a href="{{ route('cart.index') }}" class="cart-link">
                         <i class="bi bi-cart3"></i> Carrito
-                        @php
-                            $cartCount = Auth::user() ? \App\Models\CarritoItem::where('user_id', Auth::id())->count() : 0;
-                        @endphp
-                        @if($cartCount > 0)
-                            <span class="cart-badge">{{ $cartCount }}</span>
+                        @if($globalCartCount > 0)
+                            <span class="cart-badge">{{ $globalCartCount }}</span>
                         @endif
                     </a>
                 </li>
+                @if(auth()->user()->rol === 'cliente')
+                    <li><a href="{{ route('ventas.mis-pedidos') }}"><i class="bi bi-box"></i> Mis Pedidos</a></li>
+                @endif
                 @endauth
                 @auth
+                    @if(auth()->user()->rol === 'admin' || auth()->user()->rol === 'empleado')
+                        <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li><a href="{{ route('ventas.index') }}"><i class="bi bi-receipt"></i> Pedidos</a></li>
+                        <li><a href="{{ route('productos.index') }}"><i class="bi bi-box-seam"></i> Productos</a></li>
+                        <li><a href="{{ route('categorias.index') }}"><i class="bi bi-tags"></i> Categorías</a></li>
+                    @endif
                     @if(auth()->user()->rol === 'admin')
                         <li><a href="{{ route('clientes.index') }}"><i class="bi bi-people"></i> Clientes</a></li>
-                        <li><a href="{{ route('productos.index') }}"><i class="bi bi-box-seam"></i> Productos</a></li>
                         <li><a href="{{ route('usuarios.index') }}"><i class="bi bi-person-gear"></i> Usuarios</a></li>
-                    @endif
-                    @if(auth()->user()->rol === 'worker')
-                        <li><a href="{{ route('productos.index') }}"><i class="bi bi-box"></i> Inventario</a></li>
                     @endif
                 @endauth
             </ul>

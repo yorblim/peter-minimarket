@@ -45,6 +45,7 @@
                         <a href="{{ route('productos.edit', $producto) }}" class="btn-admin-edit">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
+                        @if(auth()->user()->rol === 'admin')
                         <form action="{{ route('productos.destroy', $producto) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -52,6 +53,7 @@
                                 <i class="bi bi-trash3"></i> Eliminar
                             </button>
                         </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

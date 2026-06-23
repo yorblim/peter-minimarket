@@ -83,9 +83,13 @@ class ProductoController extends Controller
         return redirect()->route('productos.index')->with('success', 'Producto actualizado con éxito.');
     }
 
-    // 🗑 ELIMINAR PRODUCTO
+    // 🗑 ELIMINAR PRODUCTO (solo admin)
     public function destroy(Producto $producto)
     {
+        if (auth()->user()->rol !== 'admin') {
+            abort(403, 'Solo el administrador puede eliminar productos.');
+        }
+
         if ($producto->imagen) {
             Storage::disk('public')->delete($producto->imagen);
         }

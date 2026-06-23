@@ -19,10 +19,8 @@ class CheckoutController extends Controller
             ->get();
 
         $subtotal = 0;
-
         foreach ($carrito as $item) {
-            $precio = $item->producto->precio_efectivo;
-            $subtotal += $precio * $item->cantidad;
+            $subtotal += $item->producto->precio_efectivo * $item->cantidad;
         }
 
         if ($subtotal < 35) {
@@ -30,9 +28,9 @@ class CheckoutController extends Controller
                 ->with('error', 'El monto mínimo para delivery es S/35');
         }
 
-        $igv = $subtotal * 0.18;
-        $delivery = $subtotal >= 45 ? 0 : 5;
-        $total = $subtotal + $igv + $delivery;
+        $igv = Venta::calcularIgv($subtotal);
+        $delivery = Venta::calcularDelivery($subtotal);
+        $total = Venta::calcularTotal($subtotal, $delivery, $igv);
 
         return view('checkout.index', compact('carrito', 'subtotal', 'igv', 'delivery', 'total'));
     }
@@ -52,8 +50,7 @@ class CheckoutController extends Controller
 
         $subtotal = 0;
         foreach ($carrito as $item) {
-            $precio = $item->producto->precio_efectivo;
-            $subtotal += $precio * $item->cantidad;
+            $subtotal += $item->producto->precio_efectivo * $item->cantidad;
 
             if ($item->cantidad > $item->producto->stock) {
                 return redirect()->route('cart.index')
@@ -85,9 +82,9 @@ class CheckoutController extends Controller
                 $item->producto->decrement('stock', $item->cantidad);
             }
 
-            $igv = $subtotal * 0.18;
-            $delivery = $subtotal >= 45 ? 0 : 5;
-            $total = $subtotal + $igv + $delivery;
+            $igv = Venta::calcularIgv($subtotal);
+            $delivery = Venta::calcularDelivery($subtotal);
+            $total = Venta::calcularTotal($subtotal, $delivery, $igv);
 
             Venta::create([
                 'user_id'  => $userId,

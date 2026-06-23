@@ -28,7 +28,7 @@
                 <td>
                     <span class="rol-badge
                         @if($usuario->rol === 'admin') rol-admin
-                        @elseif($usuario->rol === 'worker') rol-worker
+                        @elseif($usuario->rol === 'empleado') rol-empleado
                         @else rol-cliente
                         @endif
                     ">{{ $usuario->rol }}</span>

@@ -32,7 +32,7 @@
                 <label>Rol</label>
                 <select name="rol" required>
                     <option value="admin" {{ $usuario->rol == 'admin' ? 'selected' : '' }}>Administrador</option>
-                    <option value="worker" {{ $usuario->rol == 'worker' ? 'selected' : '' }}>Trabajador</option>
+                    <option value="empleado" {{ $usuario->rol == 'empleado' ? 'selected' : '' }}>Empleado</option>
                     <option value="cliente" {{ $usuario->rol == 'cliente' ? 'selected' : '' }}>Cliente</option>
                 </select>
             </div>

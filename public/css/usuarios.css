@@ -121,7 +121,8 @@
     color: #fff;
 }
 
-.rol-worker {
+.rol-worker,
+.rol-empleado {
     background: #ffd60a;
     color: #333;
 }
